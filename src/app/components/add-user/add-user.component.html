@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="danger" *ngIf="retrieveError">
+    There is problem retrieving data.
+  </div>
+  <form [formGroup]="userForm" novalidate *ngIf="!isFormSubmitted">
+    <div class="form-group">
+      <label for="user_name">Username</label>
+      <input type="text" class="form-control" formControlName="user_name" placeholder="Your Name">
+    </div>
+    <div *ngIf="user_name.invalid && (user_name.dirty || user_name.touched)" class="danger">
+      <div *ngIf="user_name.errors.required">
+        Username is required.
+      </div>
+      <div *ngIf="user_name.errors.minlength">
+        Name must be at least 3 characters long.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="first_name">First Name: </label>
+      <input type="text" class="form-control" formControlName="first_name" placeholder="abc">
+    </div>
+    <div *ngIf="first_name.invalid && (first_name.dirty || first_name.touched)" class="danger">
+      <div *ngIf="first_name.errors.required">
+        First Name is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="last_name">Last Name: </label>
+      <input type="text" class="form-control" formControlName="last_name" placeholder="def">
+    </div>
+    <div *ngIf="last_name.invalid && (last_name.dirty || last_name.touched)" class="danger">
+      <div *ngIf="last_name.errors.required">
+        Last Name is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="type">Select Type</label>
+      <select class="form-control" formControlName="type">
+        <option *ngFor="let t of types" value="{{t}}">{{t}}</option>
+      </select>
+    </div>
+    <div *ngIf="type.invalid && (type.dirty || type.touched)" class="danger">
+      <div *ngIf="type.errors.required">
+        Type is required.
+      </div>
+    </div>
+
+    <button class="btn btn-success" [disabled]="userForm.invalid" (click)="submitForm(userForm.value)">Submit</button>
+    <a class="btn btn-warning" routerLink="/users">Cancel</a>
+  </form>
+  <div>
+    <div type="success" *ngIf="isFormSubmitted">
+      Users added successfully.
+      <a class="btn btn-info" routerLink="/users">Go to users list</a>
+    </div>
+    <div class="danger" *ngIf="isFormSubmitted == null">
+      Problem adding user.
+    </div>
+  </div>
+</div>
