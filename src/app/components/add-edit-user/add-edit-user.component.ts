@@ -7,10 +7,10 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-user',
-  templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.css']
+  templateUrl: './add-edit-user.component.html',
+  styleUrls: ['./add-edit-user.component.css']
 })
-export class AddUserComponent implements OnInit {
+export class AddEditUserComponent implements OnInit {
   userForm: FormGroup;
   types = [
     'admin',
@@ -30,7 +30,10 @@ export class AddUserComponent implements OnInit {
     private userService: UserService) {
 
     this.userid = this.route.snapshot.paramMap.get('id')
-    this.editMode = this.userid !== null;
+    console.log("****** ID => "+this.userid)
+    if(!!this.userid){
+      this.editMode = true;
+    }
     this.createForm();
   }
 
@@ -80,13 +83,15 @@ export class AddUserComponent implements OnInit {
   submitForm(user: User): void {
     if (this.userForm.valid) {
       if (this.editMode) {
+        console.log("editing a user")
         user.id = this.userid;
         this.userService.updateUser(user)
         .subscribe(data => { this.isFormSubmitted = true; },
           err => {console.log(err); this.isFormSubmitted = null; });
       } else {
-        user.id = user.user_name+'_'+user.created_date
+        console.log("adding new user")
         user.created_date = this.created_date
+        user.id = user.user_name+'_'+user.created_date
         this.userService.addUser(user)
           .subscribe(data => { this.isFormSubmitted = true; },
             err => { this.isFormSubmitted = null; });
