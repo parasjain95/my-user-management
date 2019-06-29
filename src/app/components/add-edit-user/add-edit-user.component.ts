@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { User } from '../../models/user.model';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-user',
@@ -27,7 +27,8 @@ export class AddEditUserComponent implements OnInit {
     private titleService: Title,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private userService: UserService) {
+    private userService: UserService,
+    private router: Router) {
 
     this.userid = this.route.snapshot.paramMap.get('id')
     console.log("****** ID => "+this.userid)
@@ -86,14 +87,20 @@ export class AddEditUserComponent implements OnInit {
         console.log("editing a user")
         user.id = this.userid;
         this.userService.updateUser(user)
-        .subscribe(data => { this.isFormSubmitted = true; },
+        .subscribe(data => { 
+          this.isFormSubmitted = true; 
+          this.router.navigate(['/users']);
+        },
           err => {console.log(err); this.isFormSubmitted = null; });
       } else {
         console.log("adding new user")
         user.created_date = this.created_date
         user.id = user.user_name+'_'+user.created_date
         this.userService.addUser(user)
-          .subscribe(data => { this.isFormSubmitted = true; },
+          .subscribe(data => { 
+            this.isFormSubmitted = true; 
+            this.router.navigate(['/users']);
+          },
             err => { this.isFormSubmitted = null; });
       }
     }
